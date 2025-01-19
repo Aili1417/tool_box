@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aili万能工具箱</title>
+    <link rel="Shortcut Icon" href="img/favicon.ico" type="image/x-icon" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @keyframes backgroundMove {
+            0% {
+                background-position: 0% 0%;
+            }
+            100% {
+                background-position: 100% 100%;
+            }
+        }
+
+        @keyframes neonGlow {
+            0% {
+                text-shadow: 0 0 10px #0ff,
+                           0 0 20px #0ff,
+                           0 0 30px #0ff;
+            }
+            100% {
+                text-shadow: 0 0 20px #0ff,
+                           0 0 30px #0ff,
+                           0 0 40px #0ff;
+            }
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: 
+                linear-gradient(45deg, 
+                    #000428 0%, 
+                    #004e92 25%, 
+                    #2196F3 50%, 
+                    #004e92 75%, 
+                    #000428 100%);
+            background-size: 400% 400%;
+            animation: backgroundMove 15s ease infinite alternate;
+            min-height: 100vh;
+            color: white;
+            position: relative;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            text-align: center;
+            padding: 55px 0 30px;
+            position: relative;
+        }
+
+        /* 标题发光效果 */
+        h1 {
+            font-size: 4em;
+            color: #fff;
+            text-transform: uppercase;
+            animation: neonGlow 2s ease-in-out infinite alternate;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 10px;
+        }
+
+        .tools-grid {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 30px;
+            padding: 20px;
+            margin-top: 10px;
+        }
+
+        .tool-card {
+            flex: 1;
+            max-width: 380px;
+            min-width: 300px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0,255,255,0.3);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 卡片发光边框 */
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            z-index: -1;
+            border-radius: 16px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tool-card:hover::before {
+            opacity: 1;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 30px rgba(0,255,255,0.3);
+        }
+
+        .tool-icon {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .tool-card:hover .tool-icon {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        .tool-title {
+            font-size: 1.8em;
+            color: #fff;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(0,255,255,0.5);
+        }
+
+        .tool-description {
+            color: rgba(255,255,255,0.8);
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        /* 流光效果 */
+        .tool-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .tool-card:hover::after {
+            left: 100%;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0,255,255,0.3);
+            position: relative;
+            overflow: hidden;
+            margin-top: auto;
+        }
+
+        @media (max-width: 1024px) {
+            .tools-grid {
+                flex-wrap: wrap;
+            }
+            
+            .tool-card {
+                flex: 0 1 calc(50% - 15px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 40px 0 20px;
+            }
+
+            h1 {
+                font-size: 2.5em;
+                margin-bottom: 10px;
+            }
+
+            .subtitle {
+                font-size: 1.2em;
+                margin-bottom: 5px;
+            }
+
+            .tools-grid {
+                padding: 10px;
+                gap: 15px;
+                margin-top: 5px;
+            }
+
+            .tool-card {
+                padding: 20px;
+            }
+        }
+
+        /* 科技感网格 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, rgba(0,255,255,0.1) 1px, transparent 1px),
+                linear-gradient(rgba(0,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+            pointer-events: none;  /* 确保网格不影响交互 */
+        }
+
+        /* 确保其他元素在网格之上 */
+        header, main, footer {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>万能工具箱</h1>
+            <p class="subtitle">探索强大的在线工具集合</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="tools-grid">
+            <a href="calculator.html" style="text-decoration: none; color: inherit;">
+            <div class="tool-card">    
+                    <div class="tool-icon">🔢</div>
+                    <h3 class="tool-title">计算工具</h3>
+                    <p class="tool-description">专业的计算工具集合，轻松解决各类计算需求</p>
+            </div>
+            </a>
+            <a href="color.html" style="text-decoration: none; color: inherit;">
+            <div class="tool-card">
+                
+                    <div class="tool-icon">🎨</div>
+                    <h3 class="tool-title">色调工具</h3>
+                    <p class="tool-description">强大的色调工具集，释放你的创意灵感</p> 
+            </div>
+            </a>
+            <a href="download.html" style="text-decoration: none; color: inherit;">
+            <div class="tool-card">
+                    <div class="tool-icon">💾</div>
+                    <h3 class="tool-title">软件下载</h3>
+                    <p class="tool-description">精选优质开发工具，系统工具，办公软件，提供便捷下载服务</p>
+            </div>
+        </a>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 万能工具箱 <span style="color: #00f2fe;font-family: '隶书';">努尔艾力</span> 版权所有</p>
+        </div>
+    </footer>
+</body>
+</html> 

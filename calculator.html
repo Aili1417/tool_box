@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计算工具</title>
+    <link rel="Shortcut Icon" href="img/calculator.ico" type="image/x-icon" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f6f9fc 0%, #edf1f7 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        header {
+            background: linear-gradient(135deg, #24C6DC, #514A9D);
+            padding: 20px 0;
+            box-shadow: 0 4px 20px rgba(36, 198, 220, 0.2);
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.1) 50%, transparent 55%);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .header-content {
+            text-align: center;
+        }
+
+        .header-content h1 {
+            color: white;
+            font-size: 2.4em;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            letter-spacing: 1px;
+        }
+
+        .calculator-container {
+            max-width: 550px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .calculator {
+            background: #fff;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .calculator:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .calculator-screen {
+            width: 100%;
+            height: 75px;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            text-align: right;
+            padding: 18px;
+            font-size: 30px;
+            margin-bottom: 15px;
+            color: #514A9D;
+        }
+
+        .calculator-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .calculator button {
+            padding: 20px;
+            font-size: 22px;
+            border: none;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #514A9D;
+            font-weight: 500;
+        }
+
+        .calculator button:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .calculator .operator {
+            background: linear-gradient(135deg, #24C6DC, #514A9D);
+            color: white;
+        }
+
+        .calculator .operator:hover {
+            background: linear-gradient(135deg, #514A9D, #24C6DC);
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: inline-flex;
+            align-items: center;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            font-size: 15px;
+            z-index: 1;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-link:hover {
+            color: #fff;
+            transform: translateX(-5px);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .back-link::before {
+            content: '←';
+            margin-right: 8px;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .back-link:hover::before {
+            transform: translateX(-5px);
+        }
+
+        .tools-nav {
+            background: white;
+            padding: 12px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tool-button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #f8f9fa;
+            color: #514A9D;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 15px;
+            white-space: nowrap;
+            min-width: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 80%);
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            transition: transform 0.5s, opacity 0.3s;
+        }
+
+        .tool-button:active::after {
+            transform: translate(-50%, -50%) scale(2);
+            opacity: 1;
+        }
+
+        .tool-button.active {
+            background: linear-gradient(135deg, #24C6DC, #514A9D);
+            color: white;
+            box-shadow: 0 4px 12px rgba(36, 198, 220, 0.2);
+        }
+
+        .tool-content {
+            display: none;
+            animation: fadeSlideUp 0.5s ease;
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tool-content.active {
+            display: block;
+        }
+
+        /* 加权平均分计算器样式更新 */
+        .weight-calculator {
+            background: #fff;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            max-width: 550px;
+            margin: 0 auto;
+        }
+
+        .weight-calculator:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 分数和权重输入框样式更新 */
+        .weight-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        .weight-row input {
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 15px;
+        }
+
+        /* 分数输入框样式 */
+        .weight-row .score-input {
+            flex: 3;
+            max-width: 250px;
+        }
+
+        /* 权重输入框样式 */
+        .weight-row .weight-input {
+            flex: 2;
+            max-width: 170px;
+        }
+
+        .weight-row input::placeholder {
+            color: #adb5bd;
+        }
+
+        .weight-row input:focus {
+            border-color: #24C6DC;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(36, 198, 220, 0.1);
+        }
+
+        /* 删除按钮样式更新 */
+        .delete-row-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: #ff4d4d;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(255, 77, 77, 0.2);
+        }
+
+        .delete-row-btn:hover {
+            background: #ff3333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 77, 77, 0.3);
+        }
+
+        /* 添加按钮样式更新 */
+        .add-row-btn {
+            width: 100%;  /* 占满整行 */
+            background: #fff;
+            color: #514A9D;
+            border: 2px dashed #514A9D;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .add-row-btn:hover {
+            background: rgba(81, 74, 157, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .add-icon {
+            width: 24px;
+            height: 24px;
+            background: #514A9D;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .add-row-btn:hover .add-icon {
+            transform: scale(1.1);
+        }
+
+        .calculate-btn {
+            width: 100%;  /* 占满整行 */
+            background: linear-gradient(135deg, #24C6DC, #514A9D);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .calculate-btn:hover {
+            background: linear-gradient(135deg, #514A9D, #24C6DC);
+            transform: translateY(-2px);
+        }
+
+        #weight-result {
+            background: linear-gradient(135deg, #24C6DC, #514A9D);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 25px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 修改添加按钮样式 */
+        .add-row-btn {
+            flex: 1;
+            background: #fff;
+            color: #2196F3;
+            border: 2px dashed #2196F3;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .add-row-btn:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+
+        /* 添加按钮的加号图标 */
+        .add-icon {
+            width: 24px;
+            height: 24px;
+            background: #2196F3;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .add-row-btn:hover .add-icon {
+            transform: scale(1.1);
+        }
+
+        /* 删除按钮样式 */
+        .delete-row-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: none;
+            background: #ff4d4d;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .delete-row-btn:hover {
+            background: #ff3333;
+            transform: scale(1.1);
+        }
+
+        /* 确保至少有一行时隐藏删除按钮 */
+        .weight-rows.single-row .delete-row-btn {
+            display: none;
+        }
+
+        /* 进制转换器样式更新 */
+        .base-converter {
+            background: #fff;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            max-width: 550px;
+            margin: 0 auto;
+        }
+
+        .base-converter:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .base-input-group {
+            margin-bottom: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+            max-width: none;
+        }
+
+        .base-input-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .base-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #514A9D;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .base-converter input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #333;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .base-converter input:focus {
+            outline: none;
+            border-color: #24C6DC;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(36, 198, 220, 0.1);
+        }
+
+        .base-converter input::placeholder {
+            color: #adb5bd;
+        }
+
+        /* 添加进制标识 */
+        .base-input-group::after {
+            position: absolute;
+            right: 12px;
+            top: 38px;
+            font-size: 14px;
+            color: #adb5bd;
+            font-weight: 500;
+        }
+
+        .base-input-group.decimal::after {
+            content: "(10)";
+        }
+
+        .base-input-group.binary::after {
+            content: "(2)";
+        }
+
+        .base-input-group.octal::after {
+            content: "(8)";
+        }
+
+        .base-input-group.hexadecimal::after {
+            content: "(16)";
+        }
+
+        /* 添加输入框图标 */
+        .base-converter input {
+            padding-right: 45px; /* 为进制标识留出空间 */
+        }
+
+        /* 输入时的动画效果 */
+        .base-input-group.active .base-label {
+            color: #24C6DC;
+        }
+
+        .base-input-group.active input {
+            border-color: #24C6DC;
+            background: #fff;
+        }
+
+        /* 错误状态样式 */
+        .base-input-group.error input {
+            border-color: #ff4d4d;
+            background: #fff8f8;
+        }
+
+        .base-input-group.error .base-label {
+            color: #ff4d4d;
+        }
+
+        /* 加权平均分按钮样式更新 */
+        .weight-buttons {
+            display: flex;
+            flex-direction: column;  /* 改为垂直排列 */
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        /* 在大屏幕上使用横向布局 */
+        @media screen and (min-width: 768px) {
+            .weight-buttons {
+                flex-direction: row;  /* 横向排列 */
+            }
+            
+            .add-row-btn,
+            .calculate-btn {
+                flex: 1;  /* 平均分配空间 */
+            }
+
+            .tools-nav {
+                gap: 15px;
+            }
+            
+            .tool-button {
+                padding: 12px 25px;
+                font-size: 16px;
+            }
+        }
+
+        /* 移动端适配 */
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 10px;  /* 减小外层容器的内边距 */
+            }
+
+            .calculator-container,
+            .weight-calculator,
+            .base-converter {
+                padding: 0 10px;
+                max-width: 100%;
+            }
+
+            .calculator,
+            .weight-calculator,
+            .base-converter {
+                padding: 20px;
+            }
+
+            .back-link {
+                top: 15px;
+                left: 15px;
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+
+            .calculator-screen {
+                height: 70px;
+                font-size: 28px;
+                padding: 15px;
+            }
+
+            .calculator button {
+                padding: 18px;
+                font-size: 20px;
+            }
+
+            .calculator-buttons {
+                gap: 12px;
+            }
+
+            .weight-row .score-input {
+                flex: 3;
+                max-width: 160px;  /* 增加移动端宽度 */
+            }
+            
+            .weight-row .weight-input {
+                flex: 2;
+                max-width: 120px;  /* 增加移动端宽度 */
+            }
+
+            .delete-row-btn {
+                width: 28px;  /* 减小删除按钮大小 */
+                height: 28px;
+                font-size: 14px;
+            }
+
+            header {
+                padding: 15px 0;  /* 移动端更小的内边距 */
+                margin-bottom: 15px;  /* 移动端更小的底部间距 */
+            }
+
+            .header-content h1 {
+                font-size: 2em;
+            }
+
+            .tool-button {
+                padding: 10px 15px;
+                min-width: 90px;
+                font-size: 14px;
+            }
+        }
+
+        /* 更小屏幕的优化 */
+        @media screen and (max-width: 360px) {
+            .calculator-container {
+                padding: 0 5px;  /* 更小屏幕上进一步减小内边距 */
+            }
+
+            .calculator,
+            .weight-calculator,
+            .base-converter {
+                padding: 12px;  /* 更小屏幕上进一步减小卡片内边距 */
+            }
+
+            .weight-row .score-input {
+                max-width: 130px;  /* 增加小屏幕宽度 */
+            }
+            
+            .weight-row .weight-input {
+                max-width: 90px;  /* 增加小屏幕宽度 */
+            }
+        }
+
+        /* 添加页面过渡效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 优化滚动行为 */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* 添加页面加载动画 */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+
+        .page-loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+    <!-- 更新 EmailJS 初始化 -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            // 使用你的 EmailJS public key
+            emailjs.init("quSZkg8rd5xa3Ydvt");
+        })();
+    </script>
+</head>
+<body>
+    <div class="page-loader">
+        <div class="loader-content">
+            <svg width="50" height="50" viewBox="0 0 50 50">
+                <circle cx="25" cy="25" r="20" fill="none" stroke="#24C6DC" stroke-width="5">
+                    <animate attributeName="stroke-dasharray" from="0 150" to="125 150" dur="1.5s" repeatCount="indefinite"/>
+                    <animate attributeName="stroke-dashoffset" from="0" to="-125" dur="1.5s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>计算工具</h1>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <a href="index.html" class="back-link">返回首页</a>
+        
+        <div class="tools-nav">
+            <button class="tool-button" onclick="switchTool('weight')">加权平均分</button>
+            <button class="tool-button" onclick="switchTool('calculator')">科学计算器</button>
+            <button class="tool-button" onclick="switchTool('base')">进制转换</button>
+        </div>
+
+        <div class="calculator-container">
+            <!-- 加权平均分计算器 -->
+            <div id="weight-tool" class="tool-content weight-calculator">
+                <div id="weight-result"></div>
+                <div id="weight-rows">
+                    <div class="weight-row">
+                        <input type="number" placeholder="分数" class="score-input">
+                        <input type="number" placeholder="权重" class="weight-input">
+                        <button class="delete-row-btn" onclick="deleteRow(this)">×</button>
+                    </div>
+                    <div class="weight-row">
+                        <input type="number" placeholder="分数" class="score-input">
+                        <input type="number" placeholder="权重" class="weight-input">
+                        <button class="delete-row-btn" onclick="deleteRow(this)">×</button>
+                    </div>
+                    <div class="weight-row">
+                        <input type="number" placeholder="分数" class="score-input">
+                        <input type="number" placeholder="权重" class="weight-input">
+                        <button class="delete-row-btn" onclick="deleteRow(this)">×</button>
+                    </div>
+                </div>
+                <div class="weight-buttons">
+                    <button class="add-row-btn" onclick="addWeightRow()">
+                        <span class="add-icon">+</span>
+                        添加一科
+                    </button>
+                    <button class="calculate-btn" onclick="calculateWeightedAverage()">计算加权平均分</button>
+                </div>
+            </div>
+
+            <!-- 科学计算器 -->
+            <div id="calculator-tool" class="tool-content calculator">
+                <input type="text" class="calculator-screen" id="display" readonly>
+                <div class="calculator-buttons">
+                    <button onclick="clearDisplay()">C</button>
+                    <button onclick="appendToDisplay('(')">(</button>
+                    <button onclick="appendToDisplay(')')">)</button>
+                    <button class="operator" onclick="appendToDisplay('/')">/</button>
+                    
+                    <button onclick="appendToDisplay('7')">7</button>
+                    <button onclick="appendToDisplay('8')">8</button>
+                    <button onclick="appendToDisplay('9')">9</button>
+                    <button class="operator" onclick="appendToDisplay('*')">×</button>
+                    
+                    <button onclick="appendToDisplay('4')">4</button>
+                    <button onclick="appendToDisplay('5')">5</button>
+                    <button onclick="appendToDisplay('6')">6</button>
+                    <button class="operator" onclick="appendToDisplay('-')">-</button>
+                    
+                    <button onclick="appendToDisplay('1')">1</button>
+                    <button onclick="appendToDisplay('2')">2</button>
+                    <button onclick="appendToDisplay('3')">3</button>
+                    <button class="operator" onclick="appendToDisplay('+')">+</button>
+                    
+                    <button onclick="appendToDisplay('0')">0</button>
+                    <button onclick="appendToDisplay('.')">.</button>
+                    <button onclick="deleteLastChar()">←</button>
+                    <button class="operator" onclick="calculate()">=</button>
+                </div>
+            </div>
+
+            <!-- 进制转换器 -->
+            <div id="base-tool" class="tool-content base-converter">
+                <div class="base-input-group decimal">
+                    <label class="base-label">十进制</label>
+                    <input type="text" id="decimal" placeholder="输入十进制数" oninput="convertFromBase(this, 10)">
+                </div>
+                <div class="base-input-group binary">
+                    <label class="base-label">二进制</label>
+                    <input type="text" id="binary" placeholder="输入二进制数" oninput="convertFromBase(this, 2)">
+                </div>
+                <div class="base-input-group octal">
+                    <label class="base-label">八进制</label>
+                    <input type="text" id="octal" placeholder="输入八进制数" oninput="convertFromBase(this, 8)">
+                </div>
+                <div class="base-input-group hexadecimal">
+                    <label class="base-label">十六进制</label>
+                    <input type="text" id="hexadecimal" placeholder="输入十六进制数" oninput="convertFromBase(this, 16)">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 计算器功能
+        let display = document.getElementById('display');
+
+        function appendToDisplay(value) {
+            display.value += value;
+        }
+
+        function clearDisplay() {
+            display.value = '';
+        }
+
+        function deleteLastChar() {
+            display.value = display.value.slice(0, -1);
+        }
+
+        function calculate() {
+            try {
+                display.value = eval(display.value);
+            } catch (error) {
+                display.value = '错误';
+            }
+        }
+
+        // 工具切换功能
+        function switchTool(toolId) {
+            document.querySelectorAll('.tool-content').forEach(tool => {
+                tool.classList.remove('active');
+            });
+            document.querySelectorAll('.tool-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(`${toolId}-tool`).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // 修改获取设备信息的函数
+        function getDeviceInfo() {
+            const now = new Date();
+            const formatDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+            
+            return {
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                language: navigator.language,
+                timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                timestamp: formatDate
+            };
+        }
+
+        // 修改加权平均分计算功能
+        async function calculateWeightedAverage() {
+            const rows = document.querySelectorAll('.weight-row');
+            let totalWeight = 0;
+            let weightedSum = 0;
+            const scores = [];
+            let hasEmptyInput = false;
+
+            // 检查是否有空输入
+            rows.forEach(row => {
+                const scoreInput = row.querySelector('.score-input');
+                const weightInput = row.querySelector('.weight-input');
+                
+                if (!scoreInput.value || !weightInput.value) {
+                    hasEmptyInput = true;
+                    // 给空输入框添加提示效果
+                    if (!scoreInput.value) {
+                        scoreInput.style.borderColor = '#ff4d4d';
+                        scoreInput.style.backgroundColor = '#fff8f8';
+                    }
+                    if (!weightInput.value) {
+                        weightInput.style.borderColor = '#ff4d4d';
+                        weightInput.style.backgroundColor = '#fff8f8';
+                    }
+                }
+            });
+
+            // 如果有空输入，显示提示并返回
+            if (hasEmptyInput) {
+                const resultElement = document.getElementById('weight-result');
+                resultElement.style.display = 'block';
+                resultElement.style.background = '#ff4d4d';
+                resultElement.innerHTML = '请填写所有的分数和权重';
+                return;
+            }
+
+            // 继续原有的计算逻辑
+            rows.forEach(row => {
+                const score = parseFloat(row.querySelector('.score-input').value);
+                const weight = parseFloat(row.querySelector('.weight-input').value);
+                weightedSum += score * weight;
+                totalWeight += weight;
+                scores.push({ score, weight });
+            });
+
+            const result = totalWeight === 0 ? 0 : weightedSum / totalWeight;
+            const resultElement = document.getElementById('weight-result');
+            resultElement.style.display = 'block';
+            resultElement.style.background = 'linear-gradient(135deg, #24C6DC, #514A9D)';
+            resultElement.innerHTML = `加权平均分：${result.toFixed(2)}`;
+
+            // 收集用户信息和计算数据
+            const userData = {
+                deviceInfo: getDeviceInfo(),
+                calculationData: {
+                    scores,
+                    totalWeight,
+                    weightedSum,
+                    result: result.toFixed(2)
+                },
+                timestamp: new Date().toISOString()
+            };
+
+            // 保存到 localStorage
+            saveCalculationHistory(userData);
+
+            // 滚动到结果区域
+            resultElement.scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+
+        // 添加输入框焦点事件处理
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('weight-rows').addEventListener('focus', function(e) {
+                if (e.target.classList.contains('score-input') || e.target.classList.contains('weight-input')) {
+                    // 清除错误提示样式
+                    e.target.style.borderColor = '#e9ecef';
+                    e.target.style.backgroundColor = '#fff';
+                }
+            }, true);
+        });
+
+        // 更新邮件发送部分
+        function saveCalculationHistory(userData) {
+            try {
+                // localStorage 部分保持不变
+                let history = JSON.parse(localStorage.getItem('calculationHistory')) || [];
+                history.push(userData);
+                if (history.length > 100) {
+                    history = history.slice(-100);
+                }
+                localStorage.setItem('calculationHistory', JSON.stringify(history));
+                
+                // 更新邮件模板参数
+                const templateParams = {
+                    to_name: "Aili",
+                    from_name: "有人使用了加权平均分计算器",
+                    to_email: "nurali1417@126.com",
+                    user_info: `
+设备信息
+--------------------------
+设备类型：${userData.deviceInfo.userAgent}
+系统平台：${userData.deviceInfo.platform}
+系统语言：${userData.deviceInfo.language}
+所在时区：${userData.deviceInfo.timeZone}
+计算时间：${userData.deviceInfo.timestamp}
+--------------------------`,
+                    calculation_result: userData.calculationData.result,
+                    calculation_details: userData.calculationData.scores.map((item, index) => 
+                        `第${index + 1}科：${item.score}分，权重：${item.weight}`
+                    ).join('\n')
+                };
+
+                // 使用更新后的 service ID 和 template ID
+                emailjs.send(
+                    'service_aozjn5i',     // Gmail service ID
+                    'template_bf2bcbl',    // Template ID
+                    templateParams
+                ).then(
+                    function(response) {
+                        console.log("邮件发送成功", response.status, response.text);
+                    },
+                    function(error) {
+                        console.error("邮件发送失败:", error);
+                    }
+                );
+
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // 添加行功能
+        function addWeightRow() {
+            const newRow = document.createElement('div');
+            newRow.className = 'weight-row';
+            newRow.innerHTML = `
+                <input type="number" placeholder="分数" class="score-input">
+                <input type="number" placeholder="权重" class="weight-input">
+                <button class="delete-row-btn" onclick="deleteRow(this)">×</button>
+            `;
+            document.getElementById('weight-rows').appendChild(newRow);
+            checkRowCount();
+        }
+
+        // 删除行功能
+        function deleteRow(button) {
+            const row = button.parentElement;
+            const rows = document.getElementById('weight-rows');
+            rows.removeChild(row);
+            checkRowCount();
+        }
+
+        // 检查行数并更新删除按钮显示状态
+        function checkRowCount() {
+            const rows = document.getElementById('weight-rows');
+            const deleteButtons = rows.querySelectorAll('.delete-row-btn');
+            if (rows.children.length === 1) {
+                rows.classList.add('single-row');
+            } else {
+                rows.classList.remove('single-row');
+            }
+        }
+
+        // 进制转换功能
+        function convertFromBase(input, fromBase) {
+            const value = input.value.trim();
+            if (!value) return;
+
+            try {
+                const decimal = parseInt(value, fromBase);
+                if (isNaN(decimal)) return;
+
+                document.getElementById('binary').value = fromBase !== 2 ? decimal.toString(2) : value;
+                document.getElementById('octal').value = fromBase !== 8 ? decimal.toString(8) : value;
+                document.getElementById('decimal').value = fromBase !== 10 ? decimal.toString(10) : value;
+                document.getElementById('hexadecimal').value = fromBase !== 16 ? decimal.toString(16).toUpperCase() : value;
+            } catch (e) {
+                console.error('Conversion error:', e);
+            }
+        }
+
+        // 初始化显示科学计算器
+        window.onload = function() {
+            // 获取科学计算器按钮并添加active类
+            const calculatorButton = document.querySelector('button[onclick="switchTool(\'calculator\')"]');
+            calculatorButton.classList.add('active');
+            
+            // 显示科学计算器内容
+            const calculatorTool = document.getElementById('calculator-tool');
+            calculatorTool.classList.add('active');
+            checkRowCount();
+        }
+
+        // 添加进制转换器的输入框焦点效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const baseInputs = document.querySelectorAll('.base-converter input');
+            
+            baseInputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('active');
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('active');
+                });
+                
+                // 添加输入验证
+                input.addEventListener('input', function() {
+                    const baseGroup = this.parentElement;
+                    const value = this.value.trim();
+                    
+                    // 根据进制类型验证输入
+                    let isValid = true;
+                    if (baseGroup.classList.contains('binary')) {
+                        isValid = /^[01]*$/.test(value);
+                    } else if (baseGroup.classList.contains('octal')) {
+                        isValid = /^[0-7]*$/.test(value);
+                    } else if (baseGroup.classList.contains('decimal')) {
+                        isValid = /^\d*$/.test(value);
+                    } else if (baseGroup.classList.contains('hexadecimal')) {
+                        isValid = /^[0-9A-Fa-f]*$/.test(value);
+                    }
+                    
+                    if (!isValid && value !== '') {
+                        baseGroup.classList.add('error');
+                    } else {
+                        baseGroup.classList.remove('error');
+                    }
+                });
+            });
+        });
+
+        window.addEventListener('load', function() {
+            const loader = document.querySelector('.page-loader');
+            loader.classList.add('hidden');
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 500);
+        });
+    </script>
+</body>
+</html> 

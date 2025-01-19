@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>软件下载</title>
+    <link rel="Shortcut Icon" href="img/download.ico" type="image/x-icon" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f6f9fc 0%, #edf1f7 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        header {
+            background: linear-gradient(135deg, #24C6DC, #514A9D);
+            padding: 20px 0;
+            box-shadow: 0 4px 20px rgba(36, 198, 220, 0.2);
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.1) 50%, transparent 55%);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .header-content {
+            text-align: center;
+        }
+
+        .header-content h1 {
+            color: white;
+            font-size: 2.4em;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            letter-spacing: 1px;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            display: inline-flex;
+            align-items: center;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 6px;
+            font-size: 14px;
+            z-index: 1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-link:hover {
+            color: #fff;
+            transform: translateX(-5px);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .back-link::before {
+            content: '←';
+            margin-right: 6px;
+            transition: transform 0.3s ease;
+            display: inline-block;
+            font-size: 14px;
+        }
+
+        .back-link:hover::before {
+            transform: translateX(-5px);
+        }
+
+        .category-nav {
+            background: white;
+            padding: 12px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .category-button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #f8f9fa;
+            color: #514A9D;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 15px;
+            white-space: nowrap;
+            min-width: 100px;
+        }
+
+        .category-button.active {
+            background: linear-gradient(135deg, #24C6DC, #514A9D);
+            color: white;
+            box-shadow: 0 4px 12px rgba(36, 198, 220, 0.2);
+        }
+
+        .category-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .software-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .software-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: none;
+            min-width: 0;
+        }
+
+        .software-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .software-image {
+            width: 100%;
+            height: 130px;
+            object-fit: contain;
+            padding: 12px;
+            background: white;
+            border-bottom: 1px solid #eee;
+        }
+
+        .software-info {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .software-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #514A9D;
+            margin-bottom: 2px;
+        }
+
+        .software-description {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 3px;
+            height: 55px;
+            overflow: hidden;
+        }
+
+        .software-meta {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .download-button {
+            margin-top: 3px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #24C6DC, #514A9D);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(36, 198, 220, 0.2);
+            text-align: center;
+            display: block;
+        }
+
+        .download-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(36, 198, 220, 0.3);
+            background: linear-gradient(135deg, #514A9D, #24C6DC);
+        }
+
+        .category-content {
+            display: none;
+        }
+
+        .category-content.active {
+            display: block;
+        }
+
+        /* 添加页面加载动画 */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+
+        .page-loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 移动端适配 */
+        @media screen and (max-width: 1200px) {
+            .software-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media screen and (max-width: 900px) {
+            .software-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .software-grid {
+                grid-template-columns: repeat(1, 1fr);
+            }
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>软件下载</h1>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <a href="index.html" class="back-link">返回首页</a>
+        
+        <div class="category-nav">
+            <button class="category-button" onclick="switchCategory('dev')">开发工具</button>
+            <button class="category-button" onclick="switchCategory('system')">系统工具</button>
+            <button class="category-button" onclick="switchCategory('office')">办公软件</button>
+        </div>
+
+        <!-- 开发工具 -->
+        <div id="dev-content" class="category-content">
+            <div class="software-grid">
+                <!-- VS Code -->
+                <div class="software-card">
+                    <img src="https://code.visualstudio.com/assets/images/code-stable.png" alt="VS Code" class="software-image">
+                    <div class="software-info">
+                        <div class="software-name">Visual Studio Code</div>
+                        <div class="software-description">轻量级但功能强大的源代码编辑器</div>
+                        <div class="software-meta">
+                            <span>版本: 1.96.4</span>
+                        </div>
+                        <a href="https://code.visualstudio.com/download" class="download-button" target="_blank">下载</a>
+                    </div>
+                </div>
+
+                <!-- JDK -->
+                <div class="software-card">
+                    <img src="https://static.vecteezy.com/system/resources/previews/022/101/050/original/java-logo-transparent-free-png.png" alt="JDK" class="software-image">
+                    <div class="software-info">
+                        <div class="software-name">Java JDK</div>
+                        <div class="software-description">Java开发工具包，包含开发Java应用所需的所有工具</div>
+                        <div class="software-meta">
+                            <span>版本: 21.0.5</span>
+                        </div>
+                        <a href="https://www.oracle.com/cn/java/technologies/downloads/" class="download-button" target="_blank">下载</a>
+                    </div>
+                </div>
+
+                <!-- Python -->
+                <div class="software-card">
+                    <img src="https://www.python.org/static/community_logos/python-logo-generic.svg" alt="Python" class="software-image">
+                    <div class="software-info">
+                        <div class="software-name">Python</div>
+                        <div class="software-description">简单易学的高级编程语言，广泛应用于Web开发、数据科学等领域</div>
+                        <div class="software-meta">
+                            <span>版本: 3.13.1</span>
+                        </div>
+                        <a href="https://www.python.org/downloads/" class="download-button" target="_blank">下载</a>
+                    </div>
+                </div>
+
+                <!-- IntelliJ IDEA -->
+                <div class="software-card">
+                    <img src="https://resources.jetbrains.com/storage/products/intellij-idea/img/meta/intellij-idea_logo_300x300.png" alt="IntelliJ IDEA" class="software-image">
+                    <div class="software-info">
+                        <div class="software-name">IntelliJ IDEA</div>
+                        <div class="software-description">功能强大的Java集成开发环境</div>
+                        <div class="software-meta">
+                            <span>版本: 2024.3.2</span>
+                        </div>
+                        <a href="https://www.jetbrains.com/idea/download/" class="download-button" target="_blank">下载</a>
+                    </div>
+                </div>
+
+                <!-- PyCharm -->
+                <div class="software-card">
+                    <img src="https://resources.jetbrains.com/storage/products/pycharm/img/meta/pycharm_logo_300x300.png" alt="PyCharm" class="software-image">
+                    <div class="software-info">
+                        <div class="software-name">PyCharm</div>
+                        <div class="software-description">专业的Python开发工具，支持Web开发和数据科学</div>
+                        <div class="software-meta">
+                            <span>版本: 2024.3.2</span>
+                        </div>
+                        <a href="https://www.jetbrains.com/pycharm/download/" class="download-button" target="_blank">下载</a>
+                    </div>
+                </div>
+
+                <!-- WebStorm -->
+                <div class="software-card">
+                    <img src="https://resources.jetbrains.com/storage/products/webstorm/img/meta/webstorm_logo_300x300.png" alt="WebStorm" class="software-image">
+                    <div class="software-info">
+                        <div class="software-name">WebStorm</div>
+                        <div class="software-description">专业的JavaScript开发工具，支持前端和Node.js开发</div>
+                        <div class="software-meta">
+                            <span>版本: 2024.3.2</span>
+                        </div>
+                        <a href="https://www.jetbrains.com/webstorm/download/" class="download-button" target="_blank">下载</a>
+                    </div>
+                </div>
+
+                <!-- PhpStorm -->
+                <div class="software-card">
+                    <img src="https://resources.jetbrains.com/storage/products/phpstorm/img/meta/phpstorm_logo_300x300.png" alt="PhpStorm" class="software-image">
+                    <div class="software-info">
+                        <div class="software-name">PhpStorm</div>
+                        <div class="software-description">专业的PHP开发工具，支持现代Web开发</div>
+                        <div class="software-meta">
+                            <span>版本: 2024.3.2</span>
+                        </div>
+                        <a href="https://www.jetbrains.com/phpstorm/download/" class="download-button" target="_blank">下载</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 系统工具 -->
+        <div id="system-content" class="category-content">
+            <div class="software-grid">
+                <!-- 向日葵远程控制 -->
+                <div class="software-card">
+                    <img src="https://img2.baidu.com/it/u=516769746,3272975165&fm=253&fmt=auto&app=138&f=GIF?w=344&h=213" alt="SunLogin" class="software-image">
+                    <div class="software-info">
+                        <div class="software-name">向日葵远程控制</div>
+                        <div class="software-description">专业的远程控制软件，支持远程办公、远程协助等功能</div>
+                        <div class="software-meta">
+                            <span>版本: 12.5.1</span>
+                        </div>
+                        <a href="https://sunlogin.oray.com/download/" class="download-button" target="_blank">下载</a>
+                    </div>
+                </div>
+                <!-- QQ -->
+                <div class="software-card">
+                    <img src="https://img0.baidu.com/it/u=802955427,357736426&fm=253&fmt=auto&app=120&f=JPEG?w=800&h=800" alt="QQ" class="software-image">
+                    <div class="software-info">
+                        <div class="software-name">腾讯QQ</div>
+                        <div class="software-description">腾讯即时通讯软件，支持聊天、语音、视频等功能</div>
+                        <div class="software-meta">
+                            <span>版本: 9.9.6</span>
+                        </div>
+                        <a href="https://im.qq.com/download" class="download-button" target="_blank">下载</a>
+                    </div>
+                </div>
+
+                <!-- 微信 -->
+                <div class="software-card">
+                    <img src="https://img0.baidu.com/it/u=3598117849,3924383098&fm=253&fmt=auto&app=120&f=JPEG?w=888&h=500" alt="WeChat" class="software-image">
+                    <div class="software-info">
+                        <div class="software-name">微信</div>
+                        <div class="software-description">多功能社交软件，支持聊天、支付、小程序等功能</div>
+                        <div class="software-meta">
+                            <span>版本: 3.9.8</span>
+                        </div>
+                        <a href="https://pc.weixin.qq.com/" class="download-button" target="_blank">下载</a>
+                    </div>
+                </div>
+
+                <!-- 哔哩哔哩 -->
+                <div class="software-card">
+                    <img src="https://img0.baidu.com/it/u=3893695738,792655591&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" alt="Bilibili" class="software-image">
+                    <div class="software-info">
+                        <div class="software-name">哔哩哔哩</div>
+                        <div class="software-description">年轻人喜爱的视频弹幕网站，支持视频播放、直播等功能</div>
+                        <div class="software-meta">
+                            <span>版本: 1.12.1</span>
+                        </div>
+                        <a href="https://app.bilibili.com/" class="download-button" target="_blank">下载</a>
+                    </div>
+                </div>
+
+                <!-- 腾讯视频 -->
+                <div class="software-card">
+                    <img src="https://tse4-mm.cn.bing.net/th/id/OIP-C.z1pNH7CV-DZ1Ss8ak8RHmAHaHa?w=213&h=213&c=7&r=0&o=5&dpr=1.8&pid=1.7" alt="Tencent Video" class="software-image">
+                    <div class="software-info">
+                        <div class="software-name">腾讯视频</div>
+                        <div class="software-description">腾讯旗下视频平台，提供电影、电视剧、综艺等内容</div>
+                        <div class="software-meta">
+                            <span>版本: 11.88.9</span>
+                        </div>
+                        <a href="https://v.qq.com/download.html" class="download-button" target="_blank">下载</a>
+                    </div>
+                </div>
+
+                <!-- 网易云音乐 -->
+                <div class="software-card">
+                    <img src="https://tse2-mm.cn.bing.net/th/id/OIP-C.Cm04Sy-7wiCWxD_skBoMiQHaHa?w=198&h=198&c=7&r=0&o=5&dpr=1.8&pid=1.7" alt="NetEase Music" class="software-image">
+                    <div class="software-info">
+                        <div class="software-name">网易云音乐</div>
+                        <div class="software-description">专注于发现与分享的音乐平台，拥有海量音乐资源</div>
+                        <div class="software-meta">
+                            <span>版本: 3.0.1</span>
+                        </div>
+                        <a href="https://music.163.com/#/download" class="download-button" target="_blank">下载</a>
+                    </div>
+                </div>
+
+                <!-- QQ音乐 -->
+                <div class="software-card">
+                    <img src="https://y.qq.com/favicon.ico?max_age=2592000" alt="QQ Music" class="software-image">
+                    <div class="software-info">
+                        <div class="software-name">QQ音乐</div>
+                        <div class="software-description">腾讯音乐娱乐集团旗下音乐平台，提供正版音乐服务</div>
+                        <div class="software-meta">
+                            <span>版本: 19.66</span>
+                        </div>
+                        <a href="https://img0.baidu.com/it/u=1652089784,2704570247&fm=253&fmt=auto&app=120&f=JPEG?w=801&h=500" class="download-button" target="_blank">下载</a>
+                    </div>
+                </div>
+
+                <!-- 花生壳 -->
+                <div class="software-card">
+                    <img src="https://img1.baidu.com/it/u=2161861451,789705231&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" alt="Oray" class="software-image">
+                    <div class="software-info">
+                        <div class="software-name">花生壳</div>
+                        <div class="software-description">内网穿透工具，支持远程访问内网服务器、远程桌面等功能</div>
+                        <div class="software-meta">
+                            <span>版本: 5.2.0</span>
+                        </div>
+                        <a href="https://hsk.oray.com/download/" class="download-button" target="_blank">下载</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 办公软件 -->
+        <div id="office-content" class="category-content">
+            <div class="software-grid">
+                <!-- WPS Office -->
+                <div class="software-card">
+                    <img src="https://img0.baidu.com/it/u=3437809159,2149330934&fm=253&fmt=auto&app=138&f=JPEG?w=554&h=312" alt="WPS Office" class="software-image">
+                    <div class="software-info">
+                        <div class="software-name">WPS Office</div>
+                        <div class="software-description">专业的办公软件套装，完全兼容Microsoft Office格式</div>
+                        <div class="software-meta">
+                            <span>版本: 12.1.0</span>
+                        </div>
+                        <a href="https://platform.wps.cn/" class="download-button" target="_blank">下载</a>
+                    </div>
+                </div>
+
+                <!-- Microsoft Office Online -->
+                <div class="software-card">
+                    <img src="https://img1.baidu.com/it/u=3478330823,2415913381&fm=253&fmt=auto&app=138&f=PNG?w=1082&h=500" alt="Microsoft 365" class="software-image">
+                    <div class="software-info">
+                        <div class="software-name">Microsoft Office</div>
+                        <div class="software-description">微软官方办公套件，包含Word、Excel、PowerPoint等应用</div>
+                        <div class="software-meta">
+                            <span>在线版本</span>
+                        </div>
+                        <a href="https://www.microsoft.com/zh-cn/microsoft-365" class="download-button" target="_blank">访问</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加页面加载动画 HTML -->
+    <div class="page-loader">
+        <div class="loader-content">
+            <svg width="50" height="50" viewBox="0 0 50 50">
+                <circle cx="25" cy="25" r="20" fill="none" stroke="#24C6DC" stroke-width="5">
+                    <animate attributeName="stroke-dasharray" from="0 150" to="125 150" dur="1.5s" repeatCount="indefinite"/>
+                    <animate attributeName="stroke-dashoffset" from="0" to="-125" dur="1.5s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        // 分类切换功能
+        function switchCategory(categoryId) {
+            document.querySelectorAll('.category-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.category-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(`${categoryId}-content`).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // 初始化显示开发工具分类
+        window.onload = function() {
+            const sysButton = document.querySelector('button[onclick="switchCategory(\'system\')"]');
+            sysButton.classList.add('active');
+            document.getElementById('system-content').classList.add('active');
+        }
+
+        // 添加页面加载动画 JavaScript
+        window.addEventListener('load', function() {
+            const loader = document.querySelector('.page-loader');
+            loader.classList.add('hidden');
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 500);
+        });
+    </script>
+</body>
+</html> 
