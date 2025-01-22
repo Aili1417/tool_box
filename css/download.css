@@ -1,0 +1,268 @@
+/* 从download.html的<style>标签中复制的样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Microsoft YaHei', sans-serif;
+    line-height: 1.6;
+    background: linear-gradient(135deg, #f6f9fc 0%, #edf1f7 100%);
+    color: #333;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    animation: fadeIn 0.5s ease;
+}
+
+header {
+    background: linear-gradient(135deg, #24C6DC, #514A9D);
+    padding: 20px 0;
+    box-shadow: 0 4px 20px rgba(36, 198, 220, 0.2);
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.1) 50%, transparent 55%);
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.header-content {
+    text-align: center;
+}
+
+.header-content h1 {
+    color: white;
+    font-size: 2.4em;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    letter-spacing: 1px;
+}
+
+.back-link {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    display: inline-flex;
+    align-items: center;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 8px 15px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 6px;
+    font-size: 14px;
+    z-index: 1;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.back-link:hover {
+    color: #fff;
+    transform: translateX(-5px);
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+}
+
+.back-link::before {
+    content: '←';
+    margin-right: 6px;
+    transition: transform 0.3s ease;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.back-link:hover::before {
+    transform: translateX(-5px);
+}
+
+.category-nav {
+    background: white;
+    padding: 12px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.category-button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #f8f9fa;
+    color: #514A9D;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 15px;
+    white-space: nowrap;
+    min-width: 100px;
+}
+
+.category-button.active {
+    background: linear-gradient(135deg, #24C6DC, #514A9D);
+    color: white;
+    box-shadow: 0 4px 12px rgba(36, 198, 220, 0.2);
+}
+
+.category-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.software-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.software-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: none;
+    min-width: 0;
+}
+
+.software-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.software-image {
+    width: 100%;
+    height: 130px;
+    object-fit: contain;
+    padding: 12px;
+    background: white;
+    border-bottom: 1px solid #eee;
+}
+
+.software-info {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.software-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #514A9D;
+    margin-bottom: 2px;
+}
+
+.software-description {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 3px;
+    height: 55px;
+    overflow: hidden;
+}
+
+.software-meta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #888;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.download-button {
+    margin-top: 3px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #24C6DC, #514A9D);
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(36, 198, 220, 0.2);
+    text-align: center;
+    display: block;
+}
+
+.download-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(36, 198, 220, 0.3);
+    background: linear-gradient(135deg, #514A9D, #24C6DC);
+}
+
+.category-content {
+    display: none;
+}
+
+.category-content.active {
+    display: block;
+}
+
+/* 添加页面加载动画 */
+.page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s;
+}
+
+.page-loader.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 1200px) {
+    .software-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .software-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .software-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .container {
+        padding: 10px;
+    }
+} 

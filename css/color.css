@@ -1,0 +1,16 @@
+/* 从color.html的<style>标签中复制的样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Microsoft YaHei', sans-serif;
+    line-height: 1.6;
+    background: linear-gradient(135deg, #f6f9fc 0%, #edf1f7 100%);
+    color: #333;
+    min-height: 100vh;
+}
+
+/* ...其余样式保持不变... */ 
