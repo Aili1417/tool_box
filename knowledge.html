@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计算机知识清单</title>
+    <link rel="Shortcut Icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>" type="image/svg+xml">
+    <link rel="stylesheet" href="css/knowledge.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="js/knowledge.js"></script>
+</head>
+<body>
+    <div class="page-loader">
+        <div class="loader-content">
+            <svg width="50" height="50" viewBox="0 0 50 50">
+                <circle cx="25" cy="25" r="20" fill="none" stroke="#24C6DC" stroke-width="5">
+                    <animate attributeName="stroke-dasharray" from="0 150" to="125 150" dur="1.5s" repeatCount="indefinite"/>
+                    <animate attributeName="stroke-dashoffset" from="0" to="-125" dur="1.5s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>知识清单</h1>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <a href="index.html" class="back-link">返回首页</a>
+        
+        <div class="category-nav">
+            <button class="category-button" onclick="switchCategory('language')">编程语言</button>
+            <button class="category-button" onclick="switchCategory('framework')">框架技术</button>
+            <button class="category-button" onclick="switchCategory('database')">数据库</button>
+        </div>
+
+        <!-- 编程语言 -->
+        <div id="language-content" class="category-content">
+            <div class="knowledge-grid">
+                <div class="knowledge-card">
+                    <div class="knowledge-icon"><i class="fas fa-copyright"></i></div>
+                    <div class="knowledge-info">
+                        <h3>C语言</h3>
+                        <p>指针、内存管理、数据结构实现、系统编程等底层开发技术</p>
+                        <div class="knowledge-links">
+                            <a href="https://quickref.cn/docs/c.html" target="_blank">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="knowledge-card">
+                    <div class="knowledge-icon"><i class="fab fa-java"></i></div>
+                    <div class="knowledge-info">
+                        <h3>Java</h3>
+                        <p>面向对象编程、Java虚拟机、多线程并发等核心技术</p>
+                        <div class="knowledge-links">
+                            <a href="https://quickref.cn/docs/java.html" target="_blank">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="knowledge-card">
+                    <div class="knowledge-icon"><i class="fab fa-python"></i></div>
+                    <div class="knowledge-info">
+                        <h3>Python</h3>
+                        <p>Python基础语法、数据分析、人工智能等应用领域</p>
+                        <div class="knowledge-links">
+                            <a href="https://quickref.cn/docs/python.html" target="_blank">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="knowledge-card">
+                    <div class="knowledge-icon"><i class="fab fa-js"></i></div>
+                    <div class="knowledge-info">
+                        <h3>JavaScript</h3>
+                        <p>ES6+特性、异步编程、浏览器原理等前端技术</p>
+                        <div class="knowledge-links">
+                            <a href="https://quickref.cn/docs/javascript.html" target="_blank">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="knowledge-card">
+                    <div class="knowledge-icon"><i class="fas fa-code"></i></div>
+                    <div class="knowledge-info">
+                        <h3>C++</h3>
+                        <p>C++语言特性、STL、内存管理等系统编程知识</p>
+                        <div class="knowledge-links">
+                            <a href="https://quickref.cn/docs/cpp.html" target="_blank">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="knowledge-card">
+                    <div class="knowledge-icon"><i class="fas fa-globe"></i></div>
+                    <div class="knowledge-info">
+                        <h3>HTTP状态码</h3>
+                        <p>常见HTTP状态码、响应类别、错误处理、网络通信等Web开发知识</p>
+                        <div class="knowledge-links">
+                            <a href="https://quickref.cn/docs/http-status-code.html" target="_blank">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 框架技术 -->
+        <div id="framework-content" class="category-content">
+            <div class="knowledge-grid">
+                <div class="knowledge-card">
+                    <div class="knowledge-icon"><i class="fas fa-leaf"></i></div>
+                    <div class="knowledge-info">
+                        <h3>Spring</h3>
+                        <p>Spring Core、Spring Boot、Spring Cloud等企业级框架</p>
+                        <div class="knowledge-links">
+                            <a href="https://quickref.cn/docs/springboot.html" target="_blank">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="knowledge-card">
+                    <div class="knowledge-icon"><i class="fab fa-react"></i></div>
+                    <div class="knowledge-info">
+                        <h3>React</h3>
+                        <p>React核心概念、Hooks、状态管理等前端框架技术</p>
+                        <div class="knowledge-links">
+                            <a href="https://quickref.cn/docs/react.html" target="_blank">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="knowledge-card">
+                    <div class="knowledge-icon"><i class="fab fa-vuejs"></i></div>
+                    <div class="knowledge-info">
+                        <h3>Vue.js</h3>
+                        <p>Vue组件化、响应式原理、Vue Router等前端技术栈</p>
+                        <div class="knowledge-links">
+                            <a href="https://quickref.cn/docs/vue.html" target="_blank">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="knowledge-card">
+                    <div class="knowledge-icon"><i class="fab fa-python"></i></div>
+                    <div class="knowledge-info">
+                        <h3>Django</h3>
+                        <p>Python高性能Web框架、ORM、Admin、Auth等全栈开发技术</p>
+                        <div class="knowledge-links">
+                            <a href="https://quickref.cn/docs/django.html" target="_blank">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="knowledge-card">
+                    <div class="knowledge-icon"><i class="fas fa-flask"></i></div>
+                    <div class="knowledge-info">
+                        <h3>Flask</h3>
+                        <p>轻量级Web框架、路由系统、模板引擎、扩展机制等开发技术</p>
+                        <div class="knowledge-links">
+                            <a href="https://quickref.cn/docs/flask.html" target="_blank">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据库 -->
+        <div id="database-content" class="category-content">
+            <div class="knowledge-grid">
+                <div class="knowledge-card">
+                    <div class="knowledge-icon"><i class="fas fa-database"></i></div>
+                    <div class="knowledge-info">
+                        <h3>MySQL</h3>
+                        <p>关系型数据库设计、SQL优化、索引原理、事务管理等核心技术</p>
+                        <div class="knowledge-links">
+                            <a href="https://quickref.cn/docs/mysql.html" target="_blank">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="knowledge-card">
+                    <div class="knowledge-icon"><i class="fas fa-leaf"></i></div>
+                    <div class="knowledge-info">
+                        <h3>MongoDB</h3>
+                        <p>文档型数据库、NoSQL设计原则、数据模型、性能调优等技术</p>
+                        <div class="knowledge-links">
+                            <a href="https://quickref.cn/docs/mongodb.html" target="_blank">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="knowledge-card">
+                    <div class="knowledge-icon"><i class="fas fa-server"></i></div>
+                    <div class="knowledge-info">
+                        <h3>Redis</h3>
+                        <p>缓存设计、数据类型、持久化、集群部署等高性能存储方案</p>
+                        <div class="knowledge-links">
+                            <a href="https://quickref.cn/docs/redis.html" target="_blank">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="knowledge-card">
+                    <div class="knowledge-icon"><i class="fas fa-database"></i></div>
+                    <div class="knowledge-info">
+                        <h3>SQLite</h3>
+                        <p>轻量级嵌入式数据库、零配置、单文件存储、移动端开发等应用技术</p>
+                        <div class="knowledge-links">
+                            <a href="https://quickref.cn/docs/sqlite.html" target="_blank">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

@@ -54,7 +54,7 @@ main {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1600px;
     margin: 0 auto;
     padding: 20px;
     position: relative;
@@ -87,23 +87,23 @@ h1 {
 }
 
 .tools-grid {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 30px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
     padding: 20px;
     margin-top: 10px;
+    max-width: 1600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .tool-card {
     flex: 1;
-    max-width: 380px;
-    min-width: 300px;
     background: rgba(255,255,255,0.1);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(0,255,255,0.3);
     border-radius: 15px;
-    padding: 30px;
+    padding: 25px;
     text-align: center;
     transition: all 0.4s ease;
     position: relative;
@@ -189,39 +189,49 @@ footer {
     margin-top: auto;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1400px) {
     .tools-grid {
-        flex-wrap: wrap;
-    }
-    
-    .tool-card {
-        flex: 0 1 calc(50% - 15px);
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
     }
 }
 
 @media (max-width: 768px) {
     header {
-        padding: 40px 0 20px;
+        padding: 20px 0 5px;
     }
 
     h1 {
-        font-size: 2.5em;
-        margin-bottom: 10px;
+        font-size: 3em;
+        margin-bottom: 3px;
     }
 
     .subtitle {
-        font-size: 1.2em;
-        margin-bottom: 5px;
+        font-size: 1.3em;
+        margin-bottom: 0;
     }
 
     .tools-grid {
-        padding: 10px;
-        gap: 15px;
-        margin-top: 5px;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 8px;
+        margin-top: 2px;
+    }
+
+    .container {
+        padding: 15px;
     }
 
     .tool-card {
         padding: 20px;
+    }
+
+    .tool-title {
+        font-size: 1.5em;
+    }
+
+    .tool-description {
+        font-size: 1em;
     }
 }
 
