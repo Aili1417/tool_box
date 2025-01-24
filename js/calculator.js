@@ -1,23 +1,26 @@
 // 计算器功能
-let display = document.getElementById('display');
+function getDisplay() {
+    return document.getElementById('display');
+}
 
 function appendToDisplay(value) {
-    display.value += value;
+    getDisplay().value += value;
 }
 
 function clearDisplay() {
-    display.value = '';
+    getDisplay().value = '';
 }
 
 function deleteLastChar() {
-    display.value = display.value.slice(0, -1);
+    getDisplay().value = getDisplay().value.slice(0, -1);
 }
 
 function calculate() {
     try {
+        const display = getDisplay();
         display.value = eval(display.value);
     } catch (error) {
-        display.value = '错误';
+        getDisplay().value = '错误';
     }
 }
 
