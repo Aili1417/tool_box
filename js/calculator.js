@@ -51,215 +51,106 @@ function getDeviceInfo() {
     };
 }
 
-// 修改加权平均分计算功能
-async function calculateWeightedAverage() {
-    const rows = document.querySelectorAll('.weight-row');
-    let totalWeight = 0;
-    let weightedSum = 0;
-    const scores = [];
-    let hasEmptyInput = false;
-
-    // 检查是否有空输入
-    rows.forEach(row => {
-        const scoreInput = row.querySelector('.score-input');
-        const weightInput = row.querySelector('.weight-input');
-        
-        if (!scoreInput.value || !weightInput.value) {
-            hasEmptyInput = true;
-            // 给空输入框添加提示效果
-            if (!scoreInput.value) {
-                scoreInput.style.borderColor = '#ff4d4d';
-                scoreInput.style.backgroundColor = '#fff8f8';
-            }
-            if (!weightInput.value) {
-                weightInput.style.borderColor = '#ff4d4d';
-                weightInput.style.backgroundColor = '#fff8f8';
-            }
-        }
-    });
-
-    // 如果有空输入，显示提示并返回
-    if (hasEmptyInput) {
-        const resultElement = document.getElementById('weight-result');
-        resultElement.style.display = 'block';
-        resultElement.style.background = '#ff4d4d';
-        resultElement.innerHTML = '请填写所有的分数和权重';
-        // 隐藏邮箱发送部分
-        document.getElementById('email-section').style.display = 'none';
-        return;
+// 邮件发送限制配置
+const EMAIL_LIMIT = {
+    ADMIN: {
+        MAX_ATTEMPTS: 3,        // 最大尝试次数
+        LOCK_TIME: 5 * 60 * 1000,  // 锁定时间（5分钟）
+    },
+    USER: {
+        MAX_ATTEMPTS: 3,        // 最大尝试次数
+        LOCK_TIME: 5 * 60 * 1000,  // 锁定时间（5分钟）
+        PASSWORD: '0619'    // 用户邮件解锁密码
     }
+};
 
-    // 继续原有的计算逻辑
-    rows.forEach(row => {
-        const score = parseFloat(row.querySelector('.score-input').value);
-        const weight = parseFloat(row.querySelector('.weight-input').value);
-        weightedSum += score * weight;
-        totalWeight += weight;
-        scores.push({ score, weight });
-    });
-
-    const result = totalWeight === 0 ? 0 : weightedSum / totalWeight;
-    const resultElement = document.getElementById('weight-result');
-    resultElement.style.display = 'block';
-    resultElement.style.background = 'linear-gradient(135deg, #24C6DC, #514A9D)';
-    resultElement.innerHTML = `加权平均分：${result.toFixed(2)}`;
-
-
-    // 收集用户信息和计算数据
-    const userData = {
-        deviceInfo: getDeviceInfo(),
-        calculationData: {
-            scores,
-            totalWeight,
-            weightedSum,
-            result: result.toFixed(2)
-        },
-        timestamp: new Date().toISOString()
+// 获取邮件发送历史（分为管理员和用户）
+function getEmailSendHistory(type = 'admin') {
+    const storageKey = type === 'admin' ? 'adminEmailHistory' : 'userEmailHistory';
+    const history = localStorage.getItem(storageKey);
+    return history ? JSON.parse(history) : {
+        attempts: [],
+        lockedUntil: null,
+        lastResetTime: Date.now()
     };
-    if (result==0) {
-        const resultElement = document.getElementById('weight-result');
-        resultElement.style.display = 'block';
-        resultElement.style.background = '#ff4d4d';
-        resultElement.innerHTML = '请添加数据！';
-        document.getElementById('email-section').style.display = 'none';
-        return;
-    }else{
-        // 发送邮件到管理员邮箱
-        saveCalculationHistory(userData);
-        // 显示邮箱发送部分
-        document.getElementById('email-section').style.display = 'block';
-        // 保存到localStorage供用户邮箱使用
-        let history = JSON.parse(localStorage.getItem('calculationHistory')) || [];
-        history.push(userData);
-        if (history.length > 100) {
-            history = history.slice(-100);
-        }
-        localStorage.setItem('calculationHistory', JSON.stringify(history));
-    }
-
-    // 滚动到结果区域
-    resultElement.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'center'
-    });
 }
 
-// 修改清除功能，同时隐藏邮箱部分
-function clearCalculation() {
-    document.getElementById('weight-result').style.display = 'none';
-    document.getElementById('email-section').style.display = 'none';
-
-}
-
-// 添加输入框焦点事件处理
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('weight-rows').addEventListener('focus', function(e) {
-        if (e.target.classList.contains('score-input') || e.target.classList.contains('weight-input')) {
-            // 清除错误提示样式
-            e.target.style.borderColor = '#e9ecef';
-            e.target.style.backgroundColor = '#fff';
-        }
-    }, true);
-});
-
-// 更新和邮件发送部分
-function saveCalculationHistory(userData) {
-    try {
-        // 更新邮件模板参数
-        const templateParams = {
-            to_name: "Aili",
-            from_name: "有人使用了加权平均分计算器",
-            to_email: "nurali1417@126.com",
-            user_info: `
-设备信息
---------------------------
-设备类型：${userData.deviceInfo.userAgent}
-系统平台：${userData.deviceInfo.platform}
-系统语言：${userData.deviceInfo.language}
-所在时区：${userData.deviceInfo.timeZone}
-计算时间：${userData.deviceInfo.timestamp}
---------------------------`,
-            calculation_result: userData.calculationData.result,
-            calculation_details: userData.calculationData.scores.map((item, index) => 
-                `第${index + 1}科：${item.score}分，权重：${item.weight}`
-            ).join('\n')
-        };
-
-        // 发送到管理员邮箱
-        emailjs.send(
-            'service_aozjn5i',
-            'template_bf2bcbl',
-            templateParams
-        ).then(
-            function(response) {
-                console.log("邮件发送成功", response.status, response.text);
-            },
-            function(error) {
-                console.error("邮件发送失败:", error);
-            }
-        );
-
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
-// 添加行功能
-function addWeightRow() {
-    const newRow = document.createElement('div');
-    newRow.className = 'weight-row';
-    newRow.innerHTML = `
-        <input type="number" placeholder="分数" class="score-input">
-        <input type="number" placeholder="权重" class="weight-input">
-        <button class="delete-row-btn" onclick="deleteRow(this)">×</button>
-    `;
-    document.getElementById('weight-rows').appendChild(newRow);
-    checkRowCount();
-}
-
-// 删除行功能
-function deleteRow(button) {
-    const row = button.parentElement;
-    const rows = document.getElementById('weight-rows');
-    rows.removeChild(row);
-    checkRowCount();
-}
-
-// 检查行数并更新删除按钮显示状态
-function checkRowCount() {
-    const rows = document.getElementById('weight-rows');
-    const deleteButtons = rows.querySelectorAll('.delete-row-btn');
-    if (rows.children.length === 1) {
-        rows.classList.add('single-row');
-    } else {
-        rows.classList.remove('single-row');
-    }
-}
-// 显示提示框
-function showToast(message, type = 'success') {
-    const toast = document.getElementById('toast');
-    const messageEl = toast.querySelector('.toast-message');
+// 更新邮件发送历史
+function updateEmailSendHistory(type = 'admin') {
+    const history = getEmailSendHistory(type);
+    const now = Date.now();
+    const limit = EMAIL_LIMIT[type.toUpperCase()];
     
-    // 设置消息和类型
-    messageEl.textContent = message;
-    toast.className = `toast ${type}`;
+    // 如果是新的时间周期，重置记录
+    if (history.lastResetTime && now - history.lastResetTime >= limit.LOCK_TIME) {
+        history.attempts = [];
+        history.lockedUntil = null;
+        history.lastResetTime = now;
+    }
     
-    // 显示提示
-    setTimeout(() => toast.classList.add('show'), 100);
+    // 清除过期的记录
+    history.attempts = history.attempts.filter(time => 
+        now - time < limit.LOCK_TIME
+    );
     
-    // 3秒后隐藏
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 2000);
+    // 添加新的发送记录
+    history.attempts.push(now);
+    
+    // 如果达到限制，设置锁定时间
+    if (history.attempts.length > limit.MAX_ATTEMPTS) {
+        history.lockedUntil = now + limit.LOCK_TIME;
+    }
+    
+    const storageKey = type === 'admin' ? 'adminEmailHistory' : 'userEmailHistory';
+    localStorage.setItem(storageKey, JSON.stringify(history));
+    return history;
 }
 
-// 发送到用户邮箱
+// 检查是否被锁定
+function isEmailLocked(type = 'admin') {
+    const history = getEmailSendHistory(type);
+    const now = Date.now();
+    const limit = EMAIL_LIMIT[type.toUpperCase()];
+    
+    // 如果被锁定且未超时
+    if (history.lockedUntil && now < history.lockedUntil) {
+        return true;
+    }
+    
+    // 检查限制时间内的发送次数
+    const recentAttempts = history.attempts.filter(time => 
+        now - time < limit.LOCK_TIME
+    ).length;
+    
+    if (recentAttempts > limit.MAX_ATTEMPTS) {
+        // 设置锁定状态
+        history.lockedUntil = now + limit.LOCK_TIME;
+        const storageKey = type === 'admin' ? 'adminEmailHistory' : 'userEmailHistory';
+        localStorage.setItem(storageKey, JSON.stringify(history));
+        return true;
+    }
+    return false;
+}
+
+// 显示邮箱输入对话框
 function showEmailDialog() {
+    // 检查用户邮件发送限制
+    if (isEmailLocked('user')) {
+        // 如果已经在显示密码弹窗，就不再显示
+        if (document.getElementById('password-dialog').style.display === 'flex') {
+            return;
+        }
+        unlockEmailSending();
+        return;
+    }
+
+    // 检查是否有计算数据
     const history = JSON.parse(localStorage.getItem('calculationHistory')) || [];
     if (history.length === 0) {
         showToast('请先进行计算', 'error');
         return;
     }
+    
     document.getElementById('email-dialog').style.display = 'flex';
     document.getElementById('email-input').focus();
 }
@@ -269,35 +160,38 @@ function closeEmailDialog() {
     document.getElementById('email-input').value = '';
 }
 
-function confirmEmail() {
-    const emailInput = document.getElementById('email-input');
-    const userEmail = emailInput.value.trim();
-    
-    if (!validateEmail(userEmail)) {
-        emailInput.classList.add('error');
-        showToast('请输入正确的邮箱格式', 'error');
-        return;
+function confirmPassword() {
+    const password = document.getElementById('unlock-password').value;
+    if (password === EMAIL_LIMIT.USER.PASSWORD) {
+        const history = getEmailSendHistory('user');
+        // 完全重置用户发送历史和时间
+        history.attempts = [];
+        history.lockedUntil = null;
+        history.lastResetTime = Date.now();
+        localStorage.setItem('userEmailHistory', JSON.stringify(history));
+        showToast('已解锁用户邮件发送功能', 'success');
+        closePasswordDialog();
+        // 重新触发邮箱显示
+        showEmailDialog();
+    } else {
+        showToast('密码错误', 'error');
     }
-    
-    closeEmailDialog();
-    sendToUserEmail(userEmail);
 }
 
-// 添加输入时移除错误样式
-document.addEventListener('DOMContentLoaded', function() {
-    const emailInput = document.getElementById('email-input');
-    emailInput.addEventListener('input', function() {
-        this.classList.remove('error');
-    });
-});
+async function unlockEmailSending() {
+    showPasswordDialog();
+}
 
 async function sendToUserEmail(userEmail) {
+    // 更新用户邮件发送历史
+    updateEmailSendHistory('user');
+    
+    // 显示发送中状态
+    showToast('正在发送...', 'info');
+    
     // 获取最后一次计算的数据
     const history = JSON.parse(localStorage.getItem('calculationHistory')) || [];
     const lastCalculation = history[history.length - 1];
-    
-    // 显示发送中提示
-    showToast('正在发送...', 'info');
     
     // 更新邮件模板参数
     const templateParams = {
@@ -306,7 +200,7 @@ async function sendToUserEmail(userEmail) {
         user_info: `计算时间：${new Date().toLocaleString()}`,
         calculation_result: lastCalculation.calculationData.result,
         calculation_details: lastCalculation.calculationData.scores.map((item, index) => 
-            `第${index + 1}科成绩：${item.score} 分（权重:${item.weight}）`
+            `第${index + 1}科成绩：${item.score} 分（权重：${item.weight}）`
         ).join('\n')
     };
 
@@ -409,4 +303,233 @@ window.addEventListener('load', function() {
         loader.style.display = 'none';
     }, 500);
 });
+
+// 添加输入框焦点事件处理
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('weight-rows').addEventListener('focus', function(e) {
+        if (e.target.classList.contains('score-input') || e.target.classList.contains('weight-input')) {
+            // 清除错误提示样式
+            e.target.style.borderColor = '#e9ecef';
+            e.target.style.backgroundColor = '#fff';
+        }
+    }, true);
+});
+
+// 邮件发送部分
+function saveCalculationHistory(userData) {
+    try {
+        // 更新邮件模板参数
+        const templateParams = {
+            to_name: "Aili",
+            from_name: "有人使用了加权平均分计算器",
+            to_email: "nurali1417@126.com",
+            user_info: `
+设备信息
+--------------------------
+设备类型：${userData.deviceInfo.userAgent}
+系统平台：${userData.deviceInfo.platform}
+系统语言：${userData.deviceInfo.language}
+所在时区：${userData.deviceInfo.timeZone}
+计算时间：${userData.deviceInfo.timestamp}
+--------------------------`,
+            calculation_result: userData.calculationData.result,
+            calculation_details: userData.calculationData.scores.map((item, index) => 
+                `第${index + 1}科：${item.score}分，权重：${item.weight}`
+            ).join('\n')
+        };
+
+        // 发送到管理员邮箱
+        emailjs.send(
+            'service_aozjn5i',
+            'template_bf2bcbl',
+            templateParams
+        ).then(
+            function(response) {
+                console.log("邮件发送成功", response.status, response.text);
+            },
+            function(error) {
+                console.error("邮件发送失败:", error);
+            }
+        );
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+// 添加行功能
+function addWeightRow() {
+    const newRow = document.createElement('div');
+    newRow.className = 'weight-row';
+    newRow.innerHTML = `
+        <input type="number" placeholder="分数" class="score-input">
+        <input type="number" placeholder="权重" class="weight-input">
+        <button class="delete-row-btn" onclick="deleteRow(this)">×</button>
+    `;
+    document.getElementById('weight-rows').appendChild(newRow);
+    checkRowCount();
+}
+
+// 删除行功能
+function deleteRow(button) {
+    const row = button.parentElement;
+    const rows = document.getElementById('weight-rows');
+    rows.removeChild(row);
+    checkRowCount();
+}
+
+// 检查行数并更新删除按钮显示状态
+function checkRowCount() {
+    const rows = document.getElementById('weight-rows');
+    const deleteButtons = rows.querySelectorAll('.delete-row-btn');
+    if (rows.children.length === 1) {
+        rows.classList.add('single-row');
+    } else {
+        rows.classList.remove('single-row');
+    }
+}
+
+// 显示提示框
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    const messageEl = toast.querySelector('.toast-message');
+    
+    // 设置消息和类型
+    messageEl.textContent = message;
+    toast.className = `toast ${type}`;
+    
+    // 显示提示
+    setTimeout(() => toast.classList.add('show'), 100);
+    
+    // 3秒后隐藏
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 2000);
+}
+
+function showPasswordDialog() {
+    document.getElementById('password-dialog').style.display = 'flex';
+    document.getElementById('unlock-password').focus();
+}
+
+function closePasswordDialog() {
+    document.getElementById('password-dialog').style.display = 'none';
+    document.getElementById('unlock-password').value = '';
+}
+
+// 修改加权平均分计算功能
+async function calculateWeightedAverage() {
+    // 检查管理员邮件发送限制
+    if (isEmailLocked('admin')) {
+        console.log('管理员邮件发送功能已锁定，暂停发送计算结果');
+        // 继续执行计算，但不发送管理员邮件
+    }
+
+    const rows = document.querySelectorAll('.weight-row');
+    let totalWeight = 0;
+    let weightedSum = 0;
+    const scores = [];
+    let hasEmptyInput = false;
+
+    // 检查是否有空输入
+    rows.forEach(row => {
+        const scoreInput = row.querySelector('.score-input');
+        const weightInput = row.querySelector('.weight-input');
+        
+        if (!scoreInput.value || !weightInput.value) {
+            hasEmptyInput = true;
+            // 给空输入框添加提示效果
+            if (!scoreInput.value) {
+                scoreInput.style.borderColor = '#ff4d4d';
+                scoreInput.style.backgroundColor = '#fff8f8';
+            }
+            if (!weightInput.value) {
+                weightInput.style.borderColor = '#ff4d4d';
+                weightInput.style.backgroundColor = '#fff8f8';
+            }
+        }
+    });
+
+    // 如果有空输入，显示提示并返回
+    if (hasEmptyInput) {
+        const resultElement = document.getElementById('weight-result');
+        resultElement.style.display = 'block';
+        resultElement.style.background = '#ff4d4d';
+        resultElement.innerHTML = '请填写所有的分数和权重';
+        // 隐藏邮箱发送部分
+        document.getElementById('email-section').style.display = 'none';
+        return;
+    }
+
+    // 继续原有的计算逻辑
+    rows.forEach(row => {
+        const score = parseFloat(row.querySelector('.score-input').value);
+        const weight = parseFloat(row.querySelector('.weight-input').value);
+        weightedSum += score * weight;
+        totalWeight += weight;
+        scores.push({ score, weight });
+    });
+
+    const result = totalWeight === 0 ? 0 : weightedSum / totalWeight;
+    const resultElement = document.getElementById('weight-result');
+    resultElement.style.display = 'block';
+    resultElement.style.background = 'linear-gradient(135deg, #24C6DC, #514A9D)';
+    resultElement.innerHTML = `加权平均分：${result.toFixed(2)}`;
+
+    // 收集用户信息和计算数据
+    const userData = {
+        deviceInfo: getDeviceInfo(),
+        calculationData: {
+            scores,
+            totalWeight,
+            weightedSum,
+            result: result.toFixed(2)
+        },
+        timestamp: new Date().toISOString()
+    };
+
+    if (result == 0) {
+        const resultElement = document.getElementById('weight-result');
+        resultElement.style.display = 'block';
+        resultElement.style.background = '#ff4d4d';
+        resultElement.innerHTML = '请添加数据！';
+        document.getElementById('email-section').style.display = 'none';
+        return;
+    } else {
+        // 发送邮件到管理员邮箱
+        if (!isEmailLocked('admin')) {
+            updateEmailSendHistory('admin');
+            saveCalculationHistory(userData);
+        }
+        // 显示邮箱发送部分
+        document.getElementById('email-section').style.display = 'block';
+        // 保存到localStorage供用户邮箱使用
+        let history = JSON.parse(localStorage.getItem('calculationHistory')) || [];
+        history.push(userData);
+        if (history.length > 100) {
+            history = history.slice(-100);
+        }
+        localStorage.setItem('calculationHistory', JSON.stringify(history));
+    }
+
+    // 滚动到结果区域
+    resultElement.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'center'
+    });
+}
+
+function confirmEmail() {
+    const emailInput = document.getElementById('email-input');
+    const userEmail = emailInput.value.trim();
+    
+    if (!validateEmail(userEmail)) {
+        emailInput.classList.add('error');
+        showToast('请输入正确的邮箱格式', 'error');
+        return;
+    }
+    
+    closeEmailDialog();
+    sendToUserEmail(userEmail);
+}
 

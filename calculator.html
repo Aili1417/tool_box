@@ -64,6 +64,25 @@
             </div>
         </div>
 
+        <!-- 密码输入弹窗 -->
+        <div id="password-dialog" class="password-dialog">
+            <div class="password-dialog-content">
+                <div class="dialog-header">
+                    <h3>功能已锁定</h3>
+                </div>
+                <div class="dialog-body">
+                    <p class="lock-message">您的操作过于频繁，请输入密码解锁</p>
+                    <div class="input-group">
+                        <input type="password" id="unlock-password" placeholder="请输入解锁密码">
+                    </div>
+                </div>
+                <div class="dialog-buttons">
+                    <button class="cancel-btn" onclick="closePasswordDialog()">取消</button>
+                    <button class="confirm-btn" onclick="confirmPassword()">确认</button>
+                </div>
+            </div>
+        </div>
+
         <a href="index.html" class="back-link">返回首页</a>
         
         <div class="tools-nav">
