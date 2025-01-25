@@ -83,7 +83,9 @@ async function calculateWeightedAverage() {
         const resultElement = document.getElementById('weight-result');
         resultElement.style.display = 'block';
         resultElement.style.background = '#ff4d4d';
-        resultElement.innerHTML = '请填写所有的分数和分数';
+        resultElement.innerHTML = '请填写所有的分数和权重';
+        // 隐藏邮箱发送部分
+        document.getElementById('email-section').style.display = 'none';
         return;
     }
 
@@ -101,6 +103,7 @@ async function calculateWeightedAverage() {
     resultElement.style.display = 'block';
     resultElement.style.background = 'linear-gradient(135deg, #24C6DC, #514A9D)';
     resultElement.innerHTML = `加权平均分：${result.toFixed(2)}`;
+
 
     // 收集用户信息和计算数据
     const userData = {
@@ -120,8 +123,17 @@ async function calculateWeightedAverage() {
         resultElement.innerHTML = '请添加数据！';
         return;
     }else{
-        // 发送邮件
+        // 发送邮件到管理员邮箱
         saveCalculationHistory(userData);
+        // 显示邮箱发送部分
+        document.getElementById('email-section').style.display = 'block';
+        // 保存到localStorage供用户邮箱使用
+        let history = JSON.parse(localStorage.getItem('calculationHistory')) || [];
+        history.push(userData);
+        if (history.length > 100) {
+            history = history.slice(-100);
+        }
+        localStorage.setItem('calculationHistory', JSON.stringify(history));
     }
 
     // 滚动到结果区域
@@ -129,6 +141,13 @@ async function calculateWeightedAverage() {
         behavior: 'smooth',
         block: 'center'
     });
+}
+
+// 修改清除功能，同时隐藏邮箱部分
+function clearCalculation() {
+    document.getElementById('weight-result').style.display = 'none';
+    document.getElementById('email-section').style.display = 'none';
+
 }
 
 // 添加输入框焦点事件处理
@@ -145,14 +164,6 @@ document.addEventListener('DOMContentLoaded', function() {
 // 更新和邮件发送部分
 function saveCalculationHistory(userData) {
     try {
-        // localStorage 部分保持不变
-        let history = JSON.parse(localStorage.getItem('calculationHistory')) || [];
-        history.push(userData);
-        if (history.length > 100) {
-            history = history.slice(-100);
-        }
-        localStorage.setItem('calculationHistory', JSON.stringify(history));
-        
         // 更新邮件模板参数
         const templateParams = {
             to_name: "Aili",
@@ -172,10 +183,11 @@ function saveCalculationHistory(userData) {
                 `第${index + 1}科：${item.score}分，权重：${item.weight}`
             ).join('\n')
         };
-        // 使用更新后的 service ID 和 template ID
+
+        // 发送到管理员邮箱
         emailjs.send(
-            'service_aozjn5i',     // Gmail service ID
-            'template_bf2bcbl',    // Template ID
+            'service_aozjn5i',
+            'template_bf2bcbl',
             templateParams
         ).then(
             function(response) {
@@ -221,6 +233,103 @@ function checkRowCount() {
     } else {
         rows.classList.remove('single-row');
     }
+}
+// 显示提示框
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    const messageEl = toast.querySelector('.toast-message');
+    
+    // 设置消息和类型
+    messageEl.textContent = message;
+    toast.className = `toast ${type}`;
+    
+    // 显示提示
+    setTimeout(() => toast.classList.add('show'), 100);
+    
+    // 3秒后隐藏
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 2000);
+}
+
+// 发送到用户邮箱
+function showEmailDialog() {
+    const history = JSON.parse(localStorage.getItem('calculationHistory')) || [];
+    if (history.length === 0) {
+        showToast('请先进行计算', 'error');
+        return;
+    }
+    document.getElementById('email-dialog').style.display = 'flex';
+    document.getElementById('email-input').focus();
+}
+
+function closeEmailDialog() {
+    document.getElementById('email-dialog').style.display = 'none';
+    document.getElementById('email-input').value = '';
+}
+
+function confirmEmail() {
+    const emailInput = document.getElementById('email-input');
+    const userEmail = emailInput.value.trim();
+    
+    if (!validateEmail(userEmail)) {
+        emailInput.classList.add('error');
+        showToast('请输入正确的邮箱格式', 'error');
+        return;
+    }
+    
+    closeEmailDialog();
+    sendToUserEmail(userEmail);
+}
+
+// 添加输入时移除错误样式
+document.addEventListener('DOMContentLoaded', function() {
+    const emailInput = document.getElementById('email-input');
+    emailInput.addEventListener('input', function() {
+        this.classList.remove('error');
+    });
+});
+
+async function sendToUserEmail(userEmail) {
+    // 获取最后一次计算的数据
+    const history = JSON.parse(localStorage.getItem('calculationHistory')) || [];
+    const lastCalculation = history[history.length - 1];
+    
+    // 显示发送中提示
+    showToast('正在发送...', 'info');
+    
+    // 更新邮件模板参数
+    const templateParams = {
+        from_name: "努尔艾力",
+        to_email: userEmail,
+        user_info: `计算时间：${new Date().toLocaleString()}`,
+        calculation_result: lastCalculation.calculationData.result,
+        calculation_details: lastCalculation.calculationData.scores.map((item, index) => 
+            `第${index + 1}科成绩：${item.score} 分（权重:${item.weight}）`
+        ).join('\n')
+    };
+
+    try {
+        await emailjs.send(
+            'service_aozjn5i',
+            'template_u4crqro',
+            templateParams
+        );
+        showToast(`计算结果已发送到 ${userEmail}`);
+    } catch (error) {
+        console.error("邮件发送失败:", error.text);
+        if (error.text === "The recipients address is corrupted") {
+            showToast('邮箱地址无效，请检查后重试', 'error');
+        } else {
+            showToast('发送失败，请稍后重试', 'error');
+        }
+    }
+}
+
+// 邮箱格式验证
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
 }
 
 // 进制转换功能
@@ -299,3 +408,4 @@ window.addEventListener('load', function() {
         loader.style.display = 'none';
     }, 500);
 });
+

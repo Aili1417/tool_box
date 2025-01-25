@@ -9,12 +9,17 @@
 - 加权平均分计算器：支持多科目成绩的加权平均计算
 - 进制转换器：支持二进制、八进制、十进制、十六进制之间的转换
 
-### 2. 色调工具 (Color Tools)
+### 2. 计算机知识清单（Computer Knowledge List）
+- 编程语言：Java、Python、C++、JavaScript等
+- 开源框架：Spring、Spring Boot、MyBatis、Hibernate等
+- 数据库：MySQL、PostgreSQL、SQLite、Oracle等
+
+### 3. 色调工具 (Color Tools)
 - 颜色选择器：支持可视化颜色选择
 - 调色板生成器：自动生成和谐的配色方案
 - 支持 HEX、RGB 等多种颜色格式
 
-### 3. 软件下载 (Software Downloads)
+### 4. 软件下载 (Software Downloads)
 - 开发工具：VS Code、JDK、Python等主流开发工具
 - 系统工具：远程控制、即时通讯等实用软件
 - 办公软件：WPS Office、Microsoft Office等办公必备软件

@@ -37,6 +37,33 @@
     </header>
 
     <div class="container">
+        <!-- 提示框 -->
+        <div id="toast" class="toast">
+            <div class="toast-content">
+                <i class="toast-icon"></i>
+                <div class="toast-message"></div>
+            </div>
+        </div>
+
+        <!-- 邮箱输入对话框 -->
+        <div id="email-dialog" class="email-dialog">
+            <div class="email-dialog-content">
+                <div class="dialog-header">
+                    <h3>保存数据到个人邮箱</h3>
+                </div>
+                <div class="dialog-body">
+                    <div class="input-group">
+                        <label for="email-input">请输入您的邮箱地址</label>
+                        <input type="email" id="email-input" placeholder="example@email.com">
+                    </div>
+                </div>
+                <div class="dialog-buttons">
+                    <button class="cancel-btn" onclick="closeEmailDialog()">取消</button>
+                    <button class="confirm-btn" onclick="confirmEmail()">发送</button>
+                </div>
+            </div>
+        </div>
+
         <a href="index.html" class="back-link">返回首页</a>
         
         <div class="tools-nav">
@@ -49,6 +76,13 @@
             <!-- 加权平均分计算器 -->
             <div id="weight-tool" class="tool-content weight-calculator">
                 <div id="weight-result"></div>
+                <div id="email-section" style="display: none;">
+                    <div class="save-hint">若需要保留数据到本地</div>
+                    <button class="send-email-btn" onclick="showEmailDialog()">
+                        <i class="fas fa-envelope"></i>
+                        发送到我的邮箱
+                    </button>
+                </div>
                 <div id="weight-rows">
                     <div class="weight-row">
                         <input type="number" placeholder="分数" class="score-input">
