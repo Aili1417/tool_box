@@ -54,13 +54,13 @@ function getDeviceInfo() {
 // 邮件发送限制配置
 const EMAIL_LIMIT = {
     ADMIN: {
-        MAX_ATTEMPTS: 3,        // 最大尝试次数
+        MAX_ATTEMPTS: 2,        // 最大尝试次数
         LOCK_TIME: 5 * 60 * 1000,  // 锁定时间（5分钟）
     },
     USER: {
-        MAX_ATTEMPTS: 3,        // 最大尝试次数
+        MAX_ATTEMPTS: 2,        // 最大尝试次数
         LOCK_TIME: 5 * 60 * 1000,  // 锁定时间（5分钟）
-        PASSWORD: '0619'    // 用户邮件解锁密码
+        PASSWORD: '1010'    // 用户邮件解锁密码
     }
 };
 
