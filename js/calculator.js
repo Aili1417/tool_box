@@ -121,6 +121,7 @@ async function calculateWeightedAverage() {
         resultElement.style.display = 'block';
         resultElement.style.background = '#ff4d4d';
         resultElement.innerHTML = '请添加数据！';
+        document.getElementById('email-section').style.display = 'none';
         return;
     }else{
         // 发送邮件到管理员邮箱
