@@ -314,4 +314,46 @@ document.addEventListener('DOMContentLoaded', function() {
             lastSubmitTime = 0;
         }
     }
-}); 
+});
+
+// 显示开发中提示
+function showDevToolTip() {
+    // 创建弹窗元素
+    const dialog = document.createElement('div');
+    dialog.className = 'dev-dialog';
+    dialog.style.display = 'flex';
+    
+    dialog.innerHTML = `
+        <div class="dev-dialog-content">
+            <div class="dev-dialog-header">
+                <h3>功能开发中</h3>
+            </div>
+            <div class="dev-dialog-body">
+                <div class="dev-dialog-icon">🚧</div>
+                <div class="dev-dialog-message">
+                    该功能正在开发中，敬请期待...<br>
+                    我们正在努力完善这项功能
+                </div>
+                <div class="dev-dialog-buttons">
+                    <button class="dev-dialog-close">知道了</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(dialog);
+    
+    // 点击关闭按钮或背景关闭弹窗
+    const closeBtn = dialog.querySelector('.dev-dialog-close');
+    closeBtn.onclick = () => {
+        dialog.style.display = 'none';
+        setTimeout(() => dialog.remove(), 300);
+    };
+    
+    dialog.onclick = (e) => {
+        if (e.target === dialog) {
+            dialog.style.display = 'none';
+            setTimeout(() => dialog.remove(), 300);
+        }
+    };
+} 
