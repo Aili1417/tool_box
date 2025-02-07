@@ -86,15 +86,37 @@ h1 {
     margin-bottom: 10px;
 }
 
+/* 工具卡片网格布局 */
 .tools-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 25px;
+    grid-template-columns: repeat(3, 1fr); /* 改为3列 */
+    gap: 30px;
     padding: 20px;
-    margin-top: 10px;
-    max-width: 1600px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-top: 20px;
+}
+
+/* 响应式布局调整 */
+@media (max-width: 1400px) {
+    .tools-grid {
+        grid-template-columns: repeat(3, 1fr); /* 保持3列 */
+        gap: 25px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .tools-grid {
+        grid-template-columns: repeat(2, 1fr); /* 中等屏幕2列 */
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .tools-grid {
+        grid-template-columns: 1fr; /* 小屏幕1列 */
+        gap: 20px;
+        padding: 8px;
+        margin-top: 2px;
+    }
 }
 
 .tool-card {
@@ -189,13 +211,123 @@ footer {
     margin-top: auto;
 }
 
-@media (max-width: 1400px) {
-    .tools-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 30px;
+/* 科技感网格 */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(90deg, rgba(0,255,255,0.1) 1px, transparent 1px),
+        linear-gradient(rgba(0,255,255,0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    z-index: 0;
+    pointer-events: none;  /* 确保网格不影响交互 */
+}
+
+/* 确保其他元素在网格之上 */
+header, main, footer {
+    position: relative;
+    z-index: 1;
+}
+
+/* 意见箱容器 */
+.feedback-container {
+    position: absolute;
+    top: -5px;
+    right: 20px;
+}
+
+/* 修改意见箱按钮样式 */
+.feedback-btn {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, rgba(36, 198, 220, 0.9), rgba(81, 74, 157, 0.9));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 15px rgba(36, 198, 220, 0.3);
+}
+
+.feedback-icon {
+    font-style: normal;
+    font-size: 18px;
+}
+
+/* 提示标签样式 */
+.feedback-tip {
+    position: absolute;
+    top: 50%;
+    right: calc(100% + 15px);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #333;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    opacity: 0;
+    animation: tipPulse 3s ease-in-out infinite;
+}
+
+.feedback-tip span {
+    background: linear-gradient(135deg, #24C6DC, #514A9D);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 500;
+}
+
+/* 提示箭头 */
+.tip-arrow {
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 6px solid rgba(255, 255, 255, 0.95);
+}
+
+/* 提示动画 */
+@keyframes tipPulse {
+    0% {
+        opacity: 0;
+        transform: translateY(-50%) translateX(10px);
+    }
+    20% {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0);
+    }
+    80% {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-50%) translateX(10px);
     }
 }
 
+/* 按钮悬停效果 */
+.feedback-btn:hover {
+    background: linear-gradient(135deg, rgba(36, 198, 220, 1), rgba(81, 74, 157, 1));
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(36, 198, 220, 0.5);
+}
+
+/* 移动端适配 */
 @media (max-width: 768px) {
     header {
         padding: 20px 0 5px;
@@ -235,24 +367,344 @@ footer {
     }
 }
 
-/* 科技感网格 */
-body::before {
-    content: '';
+/* 意见反馈对话框样式 */
+.feedback-dialog {
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        linear-gradient(90deg, rgba(0,255,255,0.1) 1px, transparent 1px),
-        linear-gradient(rgba(0,255,255,0.1) 1px, transparent 1px);
-    background-size: 50px 50px;
-    z-index: 0;
-    pointer-events: none;  /* 确保网格不影响交互 */
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
-/* 确保其他元素在网格之上 */
-header, main, footer {
-    position: relative;
-    z-index: 1;
+.feedback-dialog-content {
+    background: white;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    animation: slideIn 0.3s ease;
+}
+
+.feedback-dialog .dialog-header {
+    background: linear-gradient(135deg, #24C6DC, #514A9D);
+    padding: 20px;
+    border-radius: 16px 16px 0 0;
+}
+
+.feedback-dialog .dialog-header h3 {
+    color: white;
+    margin: 0;
+    text-align: center;
+    font-size: 20px;
+}
+
+.feedback-dialog .dialog-body {
+    padding: 20px;
+}
+
+.feedback-dialog .input-group {
+    margin-bottom: 20px;
+}
+
+.feedback-dialog .input-group label {
+    display: block;
+    color: #333;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.feedback-dialog input,
+.feedback-dialog textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.feedback-dialog textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.feedback-dialog input:focus,
+.feedback-dialog textarea:focus {
+    outline: none;
+    border-color: #24C6DC;
+    box-shadow: 0 0 0 3px rgba(36, 198, 220, 0.1);
+}
+
+.feedback-dialog .dialog-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #eee;
+}
+
+.feedback-dialog .dialog-buttons button {
+    padding: 8px 25px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 80px;
+}
+
+/* Toast提示框样式 */
+.toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2000;
+}
+
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    backdrop-filter: blur(8px);
+    white-space: nowrap;
+}
+
+/* 输入框错误状态样式 */
+.feedback-dialog input.error,
+.feedback-dialog textarea.error {
+    border-color: #ff4d4f;
+    animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shake {
+    10%, 90% {
+        transform: translateX(-1px);
+    }
+    20%, 80% {
+        transform: translateX(2px);
+    }
+    30%, 50%, 70% {
+        transform: translateX(-3px);
+    }
+    40%, 60% {
+        transform: translateX(3px);
+    }
+}
+
+/* 修改输入框焦点样式 */
+.feedback-dialog input:focus,
+.feedback-dialog textarea:focus {
+    outline: none;
+    border-color: #24C6DC;
+    box-shadow: 0 0 0 3px rgba(36, 198, 220, 0.1);
+}
+
+/* 修改按钮悬浮效果 */
+.feedback-dialog .dialog-buttons button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(36, 198, 220, 0.2);
+}
+
+/* 名字输入框包装器样式 */
+.name-input-wrapper {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.input-container {
+    flex: 1;
+    min-width: 0; /* 防止内容溢出 */
+}
+
+.toggle-anonymous {
+    flex-shrink: 0;
+}
+
+/* 匿名按钮样式 */
+.anonymous-btn {
+    padding: 8px 15px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    color: #514A9D;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 42px;
+    white-space: nowrap;
+}
+
+.anonymous-btn:hover {
+    background: #e9ecef;
+}
+
+.anonymous-btn.active {
+    background: #514A9D;
+    color: white;
+    border-color: #514A9D;
+}
+
+/* 输入框样式优化 */
+.feedback-dialog input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.feedback-dialog label {
+    display: block;
+    color: #333;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* 匿名提示对话框样式 */
+.anonymous-notice {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+}
+
+.notice-content {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    transform: scale(0.9);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.notice-content.show {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.notice-header {
+    background: linear-gradient(135deg, #24C6DC, #514A9D);
+    padding: 15px 20px;
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notice-header h3 {
+    color: white;
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.notice-header .close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.notice-header .close-btn:hover {
+    transform: rotate(90deg);
+}
+
+.notice-body {
+    padding: 25px 20px;
+    text-align: center;
+}
+
+.notice-icon {
+    font-size: 36px;
+    margin-bottom: 15px;
+    color: #f0b90b;
+}
+
+.notice-body p {
+    margin: 0;
+    color: #333;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.notice-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #eee;
+    border-radius: 0 0 12px 12px;
+}
+
+.notice-buttons button {
+    padding: 8px 25px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 80px;
+}
+
+.notice-buttons .cancel-btn {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #495057;
+}
+
+.notice-buttons .confirm-btn {
+    background: linear-gradient(135deg, #24C6DC, #514A9D);
+    border: none;
+    color: white;
+}
+
+.notice-buttons button:hover {
+    transform: translateY(-1px);
+}
+
+.notice-buttons .cancel-btn:hover {
+    background: #e9ecef;
+}
+
+.notice-buttons .confirm-btn:hover {
+    box-shadow: 0 4px 12px rgba(36, 198, 220, 0.2);
 }

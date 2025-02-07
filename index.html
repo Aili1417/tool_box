@@ -12,6 +12,16 @@
         <div class="container">
             <h1>万能工具箱</h1>
             <p class="subtitle">探索强大的在线工具集合</p>
+            <div class="feedback-container">
+                <button id="feedback-btn" class="feedback-btn">
+                    <i class="feedback-icon">💡</i>
+                    意见箱
+                </button>
+                <div class="feedback-tip">
+                    <span>欢迎提供建议！</span>
+                    <div class="tip-arrow"></div>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -21,17 +31,19 @@
                 <div class="tool-card">    
                     <div class="tool-icon">🔢</div>
                     <h3 class="tool-title">计算工具</h3>
-                    <p class="tool-description">专业的计算工具集合，轻松解决各类计算需求</p>
+                    <p class="tool-description">包含加权平均分计算器，进制转换器等计算工具待你使用</p>
                 </div>
             </a>
             <a href="knowledge.html" style="text-decoration: none; color: inherit;">
+
                 <div class="tool-card">
                     <div class="tool-icon">💻</div>
                     <h3 class="tool-title">计算机知识清单</h3>
-                    <p class="tool-description">计算机基础知识、编程语言、框架技术等学习资源</p>
+                    <p class="tool-description">计算机基础知识、编程语言、框架技术等学习资源等你来探索</p>
                 </div>
             </a>
             <a href="download.html" style="text-decoration: none; color: inherit;">
+
                 <div class="tool-card">
                     <div class="tool-icon">💾</div>
                     <h3 class="tool-title">软件下载</h3>
@@ -53,5 +65,83 @@
             <p>© 2025 万能工具箱 <span style="color: #00f2fe;font-family: '隶书';">Aili</span> 版权所有</p>
         </div>
     </footer>
+
+    <div id="feedback-dialog" class="feedback-dialog">
+        <div class="feedback-dialog-content">
+            <div class="dialog-header">
+                <h3>意见反馈</h3>
+            </div>
+            <div class="dialog-body">
+                <div class="input-group name-group">
+                    <div class="name-input-wrapper">
+                        <div class="input-container">
+                            <label for="feedback-name">您的称呼:</label>
+                            <input type="text" id="feedback-name" placeholder="请输入您的名字">
+                        </div>
+                        <div class="toggle-anonymous">
+                            <button id="anonymous-btn" class="anonymous-btn" onclick="toggleAnonymous()">
+                                <span class="btn-text">匿名</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="feedback-content">反馈内容</label>
+                    <textarea id="feedback-content" placeholder="请输入您的意见或建议..." rows="5"></textarea>
+                </div>
+            </div>
+            <div class="dialog-buttons">
+                <button class="cancel-btn" onclick="closeFeedbackDialog()">取消</button>
+                <button class="confirm-btn" onclick="submitFeedback()">提交</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="anonymous-notice" class="anonymous-notice">
+        <div class="notice-content">
+            <div class="notice-header">
+                <h3>提示</h3>
+                <button class="close-btn" onclick="closeAnonymousNotice()">×</button>
+            </div>
+            <div class="notice-body">
+                <div class="notice-icon">❗</div>
+                <p>由于您选择匿名投稿，必须输入邮箱才能发送给官方</p>
+            </div>
+            <div class="notice-buttons">
+                <button class="confirm-btn" onclick="confirmAnonymous()">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cooldown-notice" class="anonymous-notice">
+        <div class="notice-content">
+            <div class="notice-header">
+                <h3>提示</h3>
+                <button class="close-btn" onclick="closeCooldownNotice()">×</button>
+            </div>
+            <div class="notice-body">
+                <div class="notice-icon">⏳</div>
+                <p id="cooldown-message"></p>
+            </div>
+            <div class="notice-buttons">
+                <button class="confirm-btn" onclick="closeCooldownNotice()">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <div class="toast-content">
+            <i class="toast-icon"></i>
+            <div class="toast-message"></div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("xzO6Di-kOyucPdAdr");
+        })();
+    </script>
+    <script src="js/index.js"></script>
 </body>
 </html> 
